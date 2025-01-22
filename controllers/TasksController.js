@@ -1,14 +1,16 @@
 const Task = require("../models/Task");
 const path = require("path");
 const fs = require("fs");
+const Board = require("../models/Board");
 // Create a new contact
 const createTask = async (req, res) => {
   try {
-    const { name, description, status, order } = req.body;
+    const { BoardId, name, description, status, order } = req.body;
 
     const thumbnail = req.file ? req.file.filename : null;
 
     const task = new Task({
+      BoardId,
       name,
       description,
       status,
@@ -29,9 +31,21 @@ const createTask = async (req, res) => {
 };
 
 // Get all contacts
-const getAllTasks = async (req, res) => {
+const getBoardTasks = async (req, res) => {
   try {
-    const tasks = await Task.find().sort({ createdAt: -1 });
+    const { BoardId } = req.params;
+
+    const board = await Board.findById(BoardId);
+
+    if (!board) {
+      res.status(500).json({ error: "Invalid board" });
+    }
+
+    const tasks = await Task.find({
+      BoardId,
+    }).sort({
+      createdAt: -1,
+    });
     res.json({
       success: true,
       tasks,
@@ -112,8 +126,6 @@ const updateTask = async (req, res) => {
   }
 };
 
-module.exports = updateTask;
-
 const updateTaskOrder = async (req, res) => {
   try {
     const { tasks } = req.body;
@@ -161,7 +173,7 @@ const deleteTask = async (req, res) => {
 
 module.exports = {
   createTask,
-  getAllTasks,
+  getBoardTasks,
   getTaskById,
   updateTask,
   updateTaskOrder,
