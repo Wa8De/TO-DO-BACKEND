@@ -8,6 +8,7 @@ const express = require("express");
 const cors = require("cors");
 const http = require("http");
 const routes = require("./routes/routes");
+const publicRoutes = require("./routes/publicRoutes");
 const path = require("path");
 // .env variables
 const port = process.env.PORT;
@@ -33,6 +34,7 @@ app.use(
 
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
+app.use(publicRoutes);
 app.use(routes);
 const server = http.createServer(app);
 
