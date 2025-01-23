@@ -46,7 +46,7 @@ const getBoardTasks = async (req, res) => {
     }).sort({
       createdAt: -1,
     });
-    res.json({
+    return res.status(200).json({
       success: true,
       tasks,
     });
@@ -63,7 +63,7 @@ const getTaskById = async (req, res) => {
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
-    res.json({
+    return res.status(200).json({
       success: true,
       task,
     });

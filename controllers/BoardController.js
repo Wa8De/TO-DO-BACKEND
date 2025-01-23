@@ -29,39 +29,33 @@ const createBoard = async (req, res) => {
   }
 };
 
-// Get all contacts
 const getUserBoards = async (req, res) => {
   try {
     const OwnerId = res.locals.id;
-    console.log(OwnerId);
-
-    const boards = await Board.find({ OwnerId }).sort({
-      createdAt: -1,
-    });
-    res.json({
+    const boards = await Board.find({ OwnerId }).sort({ createdAt: -1 });
+    return res.json({
       success: true,
       boards,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Server error" });
   }
 };
 
-// Get Task by ID
 const getBoardById = async (req, res) => {
   try {
     const board = await Board.findById(req.params.id);
     if (!board) {
       return res.status(404).json({ error: "Board not found" });
     }
-    res.json({
+    return res.status(200).json({
       success: true,
       board,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Server error" });
   }
 };
 
